@@ -8,12 +8,14 @@ function App() {
   const [message, setMessage] = useState('');
   const [roomId, setroomId] = useState('');
   const [socketId, setSocketId] = useState('');
-  const [receiveMSG, setReceiveMSG] = useState('');
+  const [receiveMSG, setReceiveMSG] = useState<string[]>([]);
+
+  console.log(receiveMSG);
 
   function sendMessage(e: any) {
     e.preventDefault()
-    socket.emit('message', roomId, message, socketId);
-    setMessage('')
+    socket.emit('message', roomId, message);
+    setMessage('');
   }
 
   useEffect(() => {
@@ -24,8 +26,8 @@ function App() {
       setSocketId(id)
     })
 
-    socket.on("receivemsg", (e) => {
-      setReceiveMSG(`From ${e.socketId} : ${e.msg}`);
+    socket.on("receivemsg", (msg:any) => {
+      setReceiveMSG([...receiveMSG, msg]);
     })
   })
 
@@ -36,12 +38,12 @@ function App() {
           <h2>This is the power of Socket-io <h1>{socketId}</h1></h2>
           <h3>Welcome Introduce with WebSocket Concept</h3>
           <input onChange={(e) => setroomId(e.target.value)} type="text" placeholder='Enter Room ID' />
-          <input onChange={(e) => setMessage(e.target.value)} type="text" placeholder='Chart with Friend' />
+          <input onChange={(e) => setMessage(e.target.value)} type="text" placeholder='Chart with Friend' autoComplete='off' required value={message}/>
           <button onClick={sendMessage}>Send</button>
         </div>
         <div className="msg">
-          <h2>Chart</h2>
-          <p>{receiveMSG}</p>
+          <h1>Chat...</h1>
+          <div>{receiveMSG.map((value)=><p id='msg'>{value}</p>)}</div>
         </div>
       </div>
     </>

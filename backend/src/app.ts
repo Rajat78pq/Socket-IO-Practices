@@ -17,8 +17,9 @@ const io = new Server(server,{
 io.on("connection",(socket)=>{
     console.log("New User is Connect", socket.id);
     socket.emit('socketId', socket.id);
-    socket.on('message',(roomId, msg, socketId)=>{
-        socket.to(roomId).emit("receivemsg", {socketId, msg});
+    socket.on('message',(roomId, msg)=>{
+        console.log(msg)
+        socket.to(roomId).emit("receivemsg", msg);
     })
 });
 
