@@ -21,6 +21,11 @@ io.on("connection",(socket)=>{
         console.log(msg)
         socket.to(roomId).emit("receivemsg", msg);
     })
+
+    socket.on('join-room',(group)=>{
+        socket.join(group);
+        console.log(`new user join room ${group}`);
+    })
 });
 
 
